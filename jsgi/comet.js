@@ -54,7 +54,7 @@ exports.Broadcaster = function(nextApp){
 							observer.dismiss();
 							promiseCallback();
 						}
-					});
+					}, true);
 					return {
 						then: function(callback, errback){
 							if(!streaming){
