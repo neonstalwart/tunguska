@@ -93,7 +93,7 @@ exports.Subscriber = function(subscriptions, nextApp){
 			var subscription = clientHub.subscribe(subscription, function(message){
 				clientConnection.send(message);
 			});
-			clientConnection.onclose = subscription.unsubscribe;
+			clientConnection.observe('close', subscription.unsubscribe);
 		});
 		return response;
 		//response.headers.link = '<' + path + '>; rel="hub"'; // we will just define the relationship in the schema
