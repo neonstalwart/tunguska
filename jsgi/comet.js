@@ -35,6 +35,7 @@ exports.Broadcaster = function(nextApp){
 			throw new Error("No client connection");
 		}
 		var body;
+		var observer;
 		if(clientConnection.length){
 			body = clientConnection.splice(0, clientConnection.length);
 		}else{
@@ -47,11 +48,12 @@ exports.Broadcaster = function(nextApp){
 						}
 					}
 					var promiseCallback;
-					var observer = clientConnection.observe("message", function(message){
+					observer = clientConnection.observe("message", function(message){
 						// TODO: maybe queue this up for the next event turn
 						clientConnection.splice(0, clientConnection.length).forEach(callback);
 						if(promiseCallback){
 							observer.dismiss();
+							observer = null;
 							promiseCallback();
 						}
 					});
@@ -60,19 +62,21 @@ exports.Broadcaster = function(nextApp){
 							if(!streaming){
 								promiseCallback = callback;
 							}
-						},
-						cancel: function(){
-							observer.dismiss();
 						}
 					}
 				}
 			};
 		}
-		
+
 		return {
 			status: 200,
 			headers: {},
-			body: body 
+			body: body,
+			onClose: function () {
+				if (observer) {
+					observer.dismiss();
+				}
+			}
 		};
 	};
 };
