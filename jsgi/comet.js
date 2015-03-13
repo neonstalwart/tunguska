@@ -62,7 +62,7 @@ exports.Broadcaster = function(nextApp){
 							}
 						},
 						cancel: function(){
-							clientConnection.close();
+							observer.dismiss();
 						}
 					}
 				}

@@ -27,8 +27,7 @@ exports.getQueue = function(clientId){
 		clientConnection.emit("message", message);
 	}
 	clientConnection.__proto__ = connectionPrototype;
-	
-	//lastUsedQueue.push
+
 	return clientConnection;
 };
 var startedTimer;
