@@ -34,25 +34,20 @@ var startedTimer;
 var connectionPrototype = {
 	setActive : function(active){
 		if(active){
-			// remove from inactive queue
-			if (this.previous) {
-				// adjust the most recently used connection
-				if (mostRecentlyUsed === this) {
-					mostRecentlyUsed = this.previous;
-				}
-				this.previous.next = this.next;
-				if (this.previous === this.next) {
-					// something went wrong with our queue.  quite possibly something has a stale previous or next
-					// reference
-					throw new Error("oh no");
-				}
+			// adjust the most recently used connection
+			if (mostRecentlyUsed === this) {
+				mostRecentlyUsed = this.previous || null;
+			}
+			// adjust the least recently used connection
+			if (leastRecentlyUsed === this) {
+				leastRecentlyUsed = this.next;
 			}
 
+			// remove from inactive queue
+			if (this.previous) {
+				this.previous.next = this.next;
+			}
 			if (this.next) {
-				// adjust the least recently used connection
-				if (leastRecentlyUsed === this) {
-					leastRecentlyUsed = this.next;
-				}
 				this.next.previous = this.previous;
 			}
 
@@ -67,11 +62,11 @@ var connectionPrototype = {
 				this.previous = mostRecentlyUsed;
 			}
 			mostRecentlyUsed = this;
+			if(!leastRecentlyUsed){
+				leastRecentlyUsed = this;
+			}
 			if(!startedTimer && global.setInterval){
 				startedTimer = true;
-				if(!leastRecentlyUsed){
-					leastRecentlyUsed = this;
-				}
 				setInterval(function(){
 					var thresholdTime = new Date().getTime() - exports.expirationTime;
 					while(leastRecentlyUsed && !leastRecentlyUsed.active && leastRecentlyUsed.lastTouched < thresholdTime){
