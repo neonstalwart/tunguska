@@ -81,6 +81,9 @@ var connectionPrototype = {
 						if (leastRecentlyUsed) {
 							leastRecentlyUsed.previous = null;
 						}
+						if (mostRecentlyUsed === this) {
+							mostRecentlyUsed = null;
+						}
 					}
 				}, 1000);
 			}
