@@ -114,10 +114,10 @@ exports.subscribe= function(channel, /*String?*/eventName, listener){
 	responses.unsubscribe = function(){
 			if(eventName){
 				eventName.forEach(function(eventName){
-					exports.unsubscribe(channel, eventName, listener);
+					exports.unsubscribe(channel, eventName, listeners);
 				});
 			}else{
-				exports.unsubscribe(channel, listener);
+				exports.unsubscribe(channel, listeners);
 			}
 		};
 	responses.observe = function(callback){
@@ -152,7 +152,7 @@ exports.unsubscribe= function(channel, eventName, listener){
 		subscribers.splice(subscribers.indexOf(listener), 1);
 		if(subscribers.length === 0){
 			delete hub[channel];
-			exports.publish(channel, {type:"monitored", monitored: false, clientId: listener.clientId, fortype: eventName});
+			exports.publish(channel, {channel: channel, type:"monitored", monitored: false, fortype: eventName});
 		}else{
 			forOnlyOneOtherClient(subscribers, {channel:channel, type: "monitored", monitored: false, fortype: eventName});
 		}
