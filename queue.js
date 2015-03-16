@@ -53,6 +53,7 @@ var connectionPrototype = {
 
 			this.next = this.previous = null;
 			this.active = true;
+			this.timedOut = false;
 		}else if(this.active){
 			// add to inactive queue
 			this.lastTouched = new Date().getTime();
