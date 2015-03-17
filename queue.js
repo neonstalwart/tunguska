@@ -77,12 +77,12 @@ var connectionPrototype = {
 						}else{
 							leastRecentlyUsed.close();
 						}
+						if (mostRecentlyUsed === leastRecentlyUsed) {
+							mostRecentlyUsed = null;
+						}
 						leastRecentlyUsed = leastRecentlyUsed.next;
 						if (leastRecentlyUsed) {
 							leastRecentlyUsed.previous = null;
-						}
-						if (mostRecentlyUsed === this) {
-							mostRecentlyUsed = null;
 						}
 					}
 				}, 1000);
