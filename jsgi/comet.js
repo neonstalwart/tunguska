@@ -75,6 +75,7 @@ exports.Broadcaster = function(nextApp){
 			onClose: function () {
 				if (observer) {
 					observer.dismiss();
+					observer = null;
 				}
 			}
 		};
@@ -97,7 +98,11 @@ exports.Subscriber = function(subscriptions, nextApp){
 			var subscription = clientHub.subscribe(subscription, function(message){
 				clientConnection.send(message);
 			});
-			clientConnection.observe('close', subscription.unsubscribe);
+			var observer = clientConnection.observe('close', function () {
+				observer.dismiss();
+				subscription.unsubscribe();
+				subscription = observer = null;
+			});
 		});
 		return response;
 		//response.headers.link = '<' + path + '>; rel="hub"'; // we will just define the relationship in the schema
