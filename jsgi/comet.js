@@ -98,10 +98,9 @@ exports.Subscriber = function(subscriptions, nextApp){
 			var subscription = clientHub.subscribe(subscription, function(message){
 				clientConnection.send(message);
 			});
-			var observer = clientConnection.observe('close', function () {
-				observer.dismiss();
+			clientConnection.observe('close', function () {
 				subscription.unsubscribe();
-				subscription = observer = null;
+				subscription = null;
 			});
 		});
 		return response;
